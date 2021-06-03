@@ -7,6 +7,7 @@ import java.sql.*;
  * @author sqlitetutorial.net
  */
 public class Connect {
+    static int activeUserID;
      /**
      * Connect to a sample database
      */
@@ -21,8 +22,8 @@ public class Connect {
         return conn;
     }
 
-    public static boolean adminLogin(String username, String password){
-        String sql = "SELECT USERNAME, PASSWORD FROM admin";
+    public static String adminLogin(String username, String password){
+        String sql = "SELECT NAME,USERNAME,PASSWORD,TAXID FROM admin";
         
         try (Connection conn = connect();
              Statement stmt  = conn.createStatement();
@@ -31,17 +32,20 @@ public class Connect {
             // loop through the result set
             while (rs.next()) {
                 if(rs.getString("USERNAME").equals(username)) {
-                    return rs.getString("PASSWORD").equals(password);
+                    if(rs.getString("PASSWORD").equals(password)) {
+                        activeUserID = rs.getInt("TAXID");
+                        return rs.getString("NAME");
+                    }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
+        return null;
     }
 
-    public static boolean userLogin(String username, String password){
-        String sql = "SELECT USERNAME, PASSWORD FROM customer";
+    public static String userLogin(String username, String password){
+        String sql = "SELECT NAME,USERNAME,PASSWORD,TAXID FROM customer";
         
         try (Connection conn = connect();
              Statement stmt  = conn.createStatement();
@@ -50,13 +54,16 @@ public class Connect {
             // loop through the result set
             while (rs.next()) {
                 if(rs.getString("USERNAME").equals(username)) {
-                    return rs.getString("PASSWORD").equals(password);
+                    if(rs.getString("PASSWORD").equals(password)) {
+                        activeUserID = rs.getInt("TAXID");
+                        return rs.getString("NAME");
+                    }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return false;
+        return null;
     }
 
     public static boolean registerUser(String name, String username, 
@@ -73,7 +80,7 @@ public class Connect {
 
 
         try (Connection conn = connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, name);
             pstmt.setString(2, username);
             pstmt.setString(3, password);

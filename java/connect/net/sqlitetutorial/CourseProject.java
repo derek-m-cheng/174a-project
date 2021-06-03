@@ -10,6 +10,9 @@ public class CourseProject{
     CardLayout card_frame;
     JFrame main_frame;
     JPanel card_panel;
+    JLabel name_label;
+    JLabel balance_label;
+
     CourseProject(){  
         card_frame = new CardLayout();
         main_frame = new JFrame();
@@ -89,11 +92,13 @@ public class CourseProject{
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user in");
-                boolean c = Connect.userLogin(username_field.getText(), password_field.getText());
-                if (c)
+                String c = Connect.userLogin(username_field.getText(), password_field.getText());
+                if (c != null) {
+                    name_label.setText(c);
                     card_frame.show(card_panel, "user_inter");
-                else
+                } else {
                     System.out.println("login Failed");
+                }
             }
         });
 
@@ -181,6 +186,7 @@ public class CourseProject{
                                     state_field.getText(), phone_field.getText(),
                                     email_field.getText(), taxID_field.getText(),
                                     SSN_field.getText(), false);
+                name_label.setText(name_field.getText());
                 card_frame.show(card_panel, "user_inter");
             }
         });
@@ -210,8 +216,8 @@ public class CourseProject{
         JPanel panel=new JPanel();
 
         JPanel user_info = new JPanel(new GridLayout(2,1));
-        JLabel name_label = new JLabel("temp name", SwingConstants.CENTER);
-        JLabel balance_label = new JLabel("$ temp balance", SwingConstants.CENTER);
+        name_label = new JLabel("temp name", SwingConstants.CENTER);
+        balance_label = new JLabel("$ temp balance", SwingConstants.CENTER);
         user_info.add(name_label);
         
         user_info.add(balance_label);
@@ -354,8 +360,8 @@ public class CourseProject{
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("manager in");
-                boolean c = Connect.adminLogin(username_field.getText(), password_field.getText());
-                if (c)
+                String c = Connect.adminLogin(username_field.getText(), password_field.getText());
+                if (c != null)
                     card_frame.show(card_panel, "manager_inter");
                 else
                     System.out.println("login Failed");
