@@ -495,6 +495,7 @@ public class CourseProject{
         b9.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Set Stock");
+                Connect.setStock(Double.parseDouble(price_field.getText()), stock_field.getText());
             }
         });
         stock_panel.add(stock_label);
