@@ -2,7 +2,6 @@ package net.sqlitetutorial;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  *
@@ -67,7 +66,7 @@ public class Connect {
         String sql = "SELECT BALANCE FROM market WHERE TAXID = ?";
         
         int[] balance = getBalance();
-        if (balance[0] < 1000+amount) {
+        if (balance[0]+amount < 1000) {
             System.out.println("balance below 1000");
             return false;
         }
@@ -87,6 +86,30 @@ public class Connect {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        sql = "INSERT INTO transactions(NAME,TAXID,ACTION,BALANCE,SHARES,ACTORID) VALUES(?,?,?,?,?,?)";
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setString(1, "-");
+            pstmt.setInt(2, activeUserID);
+            if (amount < 0) {
+                pstmt.setString(3, "Withdraw");
+            } else {
+                pstmt.setString(3, "Deposit");
+            }
+            pstmt.setInt(4, amount);
+            pstmt.setInt(5, 0);
+            pstmt.setString(6, "-");
+            
+            
+            int r = pstmt.executeUpdate();
+            System.out.println(r);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
         return true;
     }
 
@@ -120,6 +143,44 @@ public class Connect {
             pstmt.setInt(1, amount);
             pstmt.setInt(2, activeUserID);
             pstmt.setString(3, actor);
+            
+            int r = pstmt.executeUpdate();
+            if (r == 0) {
+                sql = "INSERT INTO transactions(TAXID,SHARES,ACTORID) VALUES(?,?,?)";
+                try (Connection conn2 = connect();
+                        PreparedStatement pstmt2 = conn2.prepareStatement(sql)) {
+
+                    // set the corresponding param
+                    pstmt2.setInt(1, activeUserID);
+                    pstmt2.setInt(2, amount);
+                    pstmt2.setString(3, actor);
+
+                    
+                    pstmt2.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        sql = "INSERT INTO transactions(NAME,TAXID,ACTION,BALANCE,SHARES,ACTORID) VALUES(?,?,?,?,?,?)";
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setString(1, "-");
+            pstmt.setInt(2, activeUserID);
+            if (amount < 0) {
+                pstmt.setString(3, "Sell");
+            } else {
+                pstmt.setString(3, "Buy");
+            }
+            pstmt.setInt(4, 0);
+            pstmt.setInt(5, amount);
+            pstmt.setString(6, actor);
+            
             
             int r = pstmt.executeUpdate();
             System.out.println(r);
