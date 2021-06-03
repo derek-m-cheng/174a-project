@@ -34,7 +34,6 @@ public class CourseProject{
         b.setFont(new java.awt.Font("Arial", Font.BOLD, 14));
         b.setBackground(Color.lightGray);
         b.setForeground(Color.black);
-        b.setPreferredSize(new Dimension(100, 50));
         return b;
     }
 
@@ -298,6 +297,37 @@ public class CourseProject{
         sell_panel.add(sell_stock_info);
         sell_panel.add(sell_button);
         panel.add(sell_panel);
+
+        JButton transaction_button = setButton("Transaction History");
+        transaction_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("transaction");
+                
+            }
+        });
+        panel.add(transaction_button);
+
+        JPanel stock_info = new JPanel();
+        JTextField stocks_field = new JTextField();
+        JButton stocks_button = setButton("Show Stocks");
+        transaction_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("transaction");
+                
+            }
+        });
+        stock_info.add(stocks_field);
+        stock_info.add(stocks_button);
+        panel.add(stock_info);
+
+        JButton movies_button = setButton("Show Movies");
+        movies_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("transaction");
+                
+            }
+        });
+        panel.add(movies_button);
 
         panel.setLayout(new GridLayout(5,2));
         return panel;

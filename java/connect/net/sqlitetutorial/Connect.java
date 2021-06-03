@@ -41,7 +41,7 @@ public class Connect {
     }
 
     public static boolean userLogin(String username, String password){
-        String sql = "SELECT USERNAME, PASSWORD FROM admin";
+        String sql = "SELECT USERNAME, PASSWORD FROM customer";
         
         try (Connection conn = connect();
              Statement stmt  = conn.createStatement();
