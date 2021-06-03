@@ -316,11 +316,13 @@ public class CourseProject{
                 
             }
         });
-        panel.add(transaction_button);
+        JPanel transaction_panel = new JPanel();
+        transaction_panel.add(transaction_button);
+        panel.add(transaction_panel);
 
         JPanel stock_info = new JPanel();
         // JTextField stocks_field = new JTextField();
-        JButton stocks_button = setButton("Show Stocks");
+        JButton stocks_button = setButton("Show My Stocks");
         stocks_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JDialog f = new JDialog();
@@ -336,8 +338,8 @@ public class CourseProject{
         stock_info.add(stocks_button);
         panel.add(stock_info);
 
-        JButton movies_button = setButton("Show Movies");
-        movies_button.addActionListener(new ActionListener() {
+        JButton actors_button = setButton("Show Actors");
+        actors_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JDialog f = new JDialog();
                 String[] title = { "Actor ID", "Current Price", "Name", "DOB", "Movie Title", "Role", "Year", "Contract"};
@@ -348,9 +350,22 @@ public class CourseProject{
                 System.out.println("transaction");
             }
         });
-        panel.add(movies_button);
+        JPanel actor_panel = new JPanel();
+        actor_panel.add(actors_button);
+        panel.add(actor_panel);
 
-        panel.setLayout(new GridLayout(5,2));
+
+        JButton movies_button = setButton("Show Movies");
+        movies_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        JPanel movies_panel = new JPanel();
+        movies_panel.add(movies_button);
+        panel.add(movies_panel);
+
+        panel.setLayout(new GridLayout(6,2));
         return panel;
     }
 
