@@ -319,23 +319,33 @@ public class CourseProject{
         panel.add(transaction_button);
 
         JPanel stock_info = new JPanel();
-        JTextField stocks_field = new JTextField();
+        // JTextField stocks_field = new JTextField();
         JButton stocks_button = setButton("Show Stocks");
-        transaction_button.addActionListener(new ActionListener() {
+        stocks_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("transaction");
-                
+                JDialog f = new JDialog();
+                String[] title = { "Actor ID", "Current Price", "Shares"};
+                JTable tb = new JTable(Connect.getStocks(), title);
+                f.setSize(1000,600); 
+                f.add(new JScrollPane(tb));
+                f.setVisible(true);
+                System.out.println("show stocks");
             }
         });
-        stock_info.add(stocks_field);
+        // stock_info.add(stocks_field);
         stock_info.add(stocks_button);
         panel.add(stock_info);
 
         JButton movies_button = setButton("Show Movies");
         movies_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                JDialog f = new JDialog();
+                String[] title = { "Actor ID", "Current Price", "Name", "DOB", "Movie Title", "Role", "Year", "Contract"};
+                JTable tb = new JTable(Connect.getMovies(), title);
+                f.setSize(1000,600); 
+                f.add(new JScrollPane(tb));
+                f.setVisible(true);
                 System.out.println("transaction");
-                
             }
         });
         panel.add(movies_button);

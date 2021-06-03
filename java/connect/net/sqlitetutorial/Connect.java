@@ -1,6 +1,8 @@
 package net.sqlitetutorial;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  *
@@ -62,7 +64,7 @@ public class Connect {
 
     public static boolean updateMarket(int amount){
         String sql = "UPDATE market SET BALANCE = BALANCE + ? "
-                + "WHERE TAXID = ?";
+                + "WHERE TAXID = ? AND BALANCE > 1000";
 
         try (Connection conn = connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -191,5 +193,67 @@ public class Connect {
             System.out.println(e.getMessage());
         }
         return false;
+    }
+
+    public static String[][] getStocks() {
+        ArrayList<String[]> al = new ArrayList<String[]>();
+
+        String sql = "SELECT asinfo.ACTORID, asinfo.CURRENTPRICE, stock.SHARES "
+                + "FROM stock INNER JOIN asinfo "
+                + "ON stock.ACTORID = asinfo.ACTORID "
+                + "WHERE stock.TAXID = ?";
+        
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setInt(1, activeUserID);
+            ResultSet rs  = pstmt.executeQuery();
+            
+            // loop through the result set
+            while (rs.next()) {
+                String[] act = new String[3];
+                for (int j=0; j < 3; j++){
+                    act[j] = rs.getString(j+1);
+                }
+                al.add(act);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String[][] array = new String[al.size()][];
+        for (int i = 0; i < al.size(); i++) {
+            array[i] = al.get(i);
+        }
+        return array;
+    }
+
+    public static String[][] getMovies() {
+        ArrayList<String[]> al = new ArrayList<String[]>();
+
+        String sql = "SELECT ACTORID,CURRENTPRICE,NAME,DOB,MOVIETITLE,ROLE,YEAR,CONTRACT FROM asinfo";
+        
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+            
+            // loop through the result set
+            while (rs.next()) {
+                String[] act = new String[8];
+                for (int j=0; j < 8; j++){
+                    act[j] = rs.getString(j+1);
+                }
+                al.add(act);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String[][] array = new String[al.size()][];
+        for (int i = 0; i < al.size(); i++) {
+            array[i] = al.get(i);
+        }
+        return array;
     }
 }
