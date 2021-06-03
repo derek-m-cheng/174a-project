@@ -22,6 +22,44 @@ public class Connect {
         return conn;
     }
 
+    public static int getBalance() {
+        int sum = 0;
+        String sql = "SELECT BALANCE FROM market WHERE TAXID = ?";
+        
+        // market sum
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setInt(1,activeUserID);
+            ResultSet rs  = pstmt.executeQuery();
+            while (rs.next()) {
+                sum += rs.getInt("BALANCE");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        sql = "SELECT stock.SHARES, asinfo.CURRENTPRICE "
+                + "FROM stock INNER JOIN asinfo "
+                + "ON stock.ACTORID = asinfo.ACTORID "
+                + "WHERE stock.TAXID = ?";
+        
+        // market sum
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+            pstmt.setInt(1,activeUserID);
+            ResultSet rs  = pstmt.executeQuery();
+            while (rs.next()) {
+                sum += rs.getInt("SHARES") * rs.getInt("CURRENTPRICE");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return sum;
+    }
+
     public static String adminLogin(String username, String password){
         String sql = "SELECT NAME,USERNAME,PASSWORD,TAXID FROM admin";
         

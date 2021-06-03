@@ -95,6 +95,7 @@ public class CourseProject{
                 String c = Connect.userLogin(username_field.getText(), password_field.getText());
                 if (c != null) {
                     name_label.setText(c);
+                    balance_label.setText(String.valueOf(Connect.getBalance()));
                     card_frame.show(card_panel, "user_inter");
                 } else {
                     System.out.println("login Failed");
