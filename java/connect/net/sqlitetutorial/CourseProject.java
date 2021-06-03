@@ -95,7 +95,8 @@ public class CourseProject{
                 String c = Connect.userLogin(username_field.getText(), password_field.getText());
                 if (c != null) {
                     name_label.setText(c);
-                    balance_label.setText(String.valueOf(Connect.getBalance()));
+                    int[] b = Connect.getBalance();
+                    balance_label.setText(String.format("Market: %d$, Stock: %d$",b[0], b[1]));
                     card_frame.show(card_panel, "user_inter");
                 } else {
                     System.out.println("login Failed");
@@ -232,7 +233,8 @@ public class CourseProject{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Deposit");
                 Connect.updateMarket(Integer.parseInt(despoit_field.getText()));
-                balance_label.setText(String.valueOf(Connect.getBalance()));
+                int[] b = Connect.getBalance();
+                balance_label.setText(String.format("Market: %d$, Stock: %d$",b[0], b[1]));
             }
         });
         despoit_panel.add(despoit_label);
@@ -248,7 +250,8 @@ public class CourseProject{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Deposit");
                 Connect.updateMarket(-1*Integer.parseInt(withdraw_field.getText()));
-                balance_label.setText(String.valueOf(Connect.getBalance()));
+                int[] b = Connect.getBalance();
+                balance_label.setText(String.format("Market: %d$, Stock: %d$",b[0], b[1]));
             }
         });
         withdraw_panel.add(withdraw_label);
@@ -266,7 +269,8 @@ public class CourseProject{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("buy stock");
                 Connect.updateStock(Integer.parseInt(buy_stock_field.getText()), buy_field.getText());
-                balance_label.setText(String.valueOf(Connect.getBalance()));
+                int[] b = Connect.getBalance();
+                balance_label.setText(String.format("Market: %d$, Stock: %d$",b[0], b[1]));
             }
         });
         JPanel buy_stock_info = new JPanel(new GridLayout(2,1));
@@ -293,7 +297,8 @@ public class CourseProject{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("sell stock");
                 Connect.updateStock(-1*Integer.parseInt(sell_stock_field.getText()), sell_field.getText());
-                balance_label.setText(String.valueOf(Connect.getBalance()));
+                int[] b = Connect.getBalance();
+                balance_label.setText(String.format("Market: %d$, Stock: %d$",b[0], b[1]));
             }
         });
         JPanel sell_stock_info = new JPanel(new GridLayout(2,1));

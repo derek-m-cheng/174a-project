@@ -24,8 +24,8 @@ public class Connect {
         return conn;
     }
 
-    public static int getBalance() {
-        int sum = 0;
+    public static int[] getBalance() {
+        int[] sum = {0,0};
         String sql = "SELECT BALANCE FROM market WHERE TAXID = ?";
         
         // market sum
@@ -35,7 +35,7 @@ public class Connect {
             pstmt.setInt(1,activeUserID);
             ResultSet rs  = pstmt.executeQuery();
             while (rs.next()) {
-                sum += rs.getInt("BALANCE");
+                sum[0] += rs.getInt("BALANCE");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -53,7 +53,7 @@ public class Connect {
             pstmt.setInt(1,activeUserID);
             ResultSet rs  = pstmt.executeQuery();
             while (rs.next()) {
-                sum += rs.getInt("SHARES") * rs.getInt("CURRENTPRICE");
+                sum[1] += rs.getInt("SHARES") * rs.getInt("CURRENTPRICE");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -63,8 +63,17 @@ public class Connect {
     }
 
     public static boolean updateMarket(int amount){
-        String sql = "UPDATE market SET BALANCE = BALANCE + ? "
-                + "WHERE TAXID = ? AND BALANCE > 1000";
+
+        String sql = "SELECT BALANCE FROM market WHERE TAXID = ?";
+        
+        int[] balance = getBalance();
+        if (balance[0] < 1000+amount) {
+            System.out.println("balance below 1000");
+            return false;
+        }
+
+        sql = "UPDATE market SET BALANCE = BALANCE + ? "
+                + "WHERE TAXID = ?";
 
         try (Connection conn = connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -255,5 +264,71 @@ public class Connect {
             array[i] = al.get(i);
         }
         return array;
+    }
+
+    public static String[][] getActiveUser() {
+        ArrayList<String[]> al = new ArrayList<String[]>();
+
+        String sql = "SELECT ACTORID,CURRENTPRICE,NAME,DOB,MOVIETITLE,ROLE,YEAR,CONTRACT FROM asinfo";
+        
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)){
+            
+            // loop through the result set
+            while (rs.next()) {
+                String[] act = new String[8];
+                for (int j=0; j < 8; j++){
+                    act[j] = rs.getString(j+1);
+                }
+                al.add(act);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        String[][] array = new String[al.size()][];
+        for (int i = 0; i < al.size(); i++) {
+            array[i] = al.get(i);
+        }
+        return array;
+    }
+
+    public static boolean setStock(double price, String actor) {
+        // check if the stock is real
+        String sql = "SELECT COUNT(*) FROM asinfo WHERE ACTORID = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setString(1, actor);
+            ResultSet rs  = pstmt.executeQuery();
+            
+            if (rs.getInt("COUNT(*)") == 0) {
+                System.out.println("actor doesn't exist");
+
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        sql = "UPDATE asinfo SET CURRENTPRICE = ? "
+                + "WHERE ACTORID = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setDouble(1, price);
+            pstmt.setString(2, actor);
+            
+            int r = pstmt.executeUpdate();
+            System.out.println(r);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return true;
     }
 }
