@@ -231,7 +231,8 @@ public class CourseProject{
         despoit_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Deposit");
-                
+                Connect.updateMarket(Integer.parseInt(despoit_field.getText()));
+                balance_label.setText(String.valueOf(Connect.getBalance()));
             }
         });
         despoit_panel.add(despoit_label);
@@ -246,7 +247,8 @@ public class CourseProject{
         withdraw_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Deposit");
-                
+                Connect.updateMarket(-1*Integer.parseInt(withdraw_field.getText()));
+                balance_label.setText(String.valueOf(Connect.getBalance()));
             }
         });
         withdraw_panel.add(withdraw_label);
@@ -262,8 +264,9 @@ public class CourseProject{
         JButton buy_button = setButton("Buy");
         buy_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Deposit");
-                
+                System.out.println("buy stock");
+                Connect.updateStock(Integer.parseInt(buy_stock_field.getText()), buy_field.getText());
+                balance_label.setText(String.valueOf(Connect.getBalance()));
             }
         });
         JPanel buy_stock_info = new JPanel(new GridLayout(2,1));
@@ -288,8 +291,9 @@ public class CourseProject{
         JButton sell_button = setButton("Sell");
         sell_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Deposit");
-                
+                System.out.println("sell stock");
+                Connect.updateStock(-1*Integer.parseInt(sell_stock_field.getText()), sell_field.getText());
+                balance_label.setText(String.valueOf(Connect.getBalance()));
             }
         });
         JPanel sell_stock_info = new JPanel(new GridLayout(2,1));

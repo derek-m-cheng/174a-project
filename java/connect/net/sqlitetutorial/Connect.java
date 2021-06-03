@@ -60,6 +60,64 @@ public class Connect {
         return sum;
     }
 
+    public static boolean updateMarket(int amount){
+        String sql = "UPDATE market SET BALANCE = BALANCE + ? "
+                + "WHERE TAXID = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setInt(1, amount);
+            pstmt.setInt(2, activeUserID);
+            
+            int r = pstmt.executeUpdate();
+            System.out.println(r);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+
+    public static boolean updateStock(int amount, String actor){
+
+        // check if the stock is real
+        String sql = "SELECT COUNT(*) FROM asinfo WHERE ACTORID = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setString(1, actor);
+            ResultSet rs  = pstmt.executeQuery();
+            
+            if (rs.getInt("COUNT(*)") == 0) {
+                System.out.println("actor doesn't exist");
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        sql = "UPDATE stock SET SHARES = SHARES + ? "
+                + "WHERE TAXID = ? AND ACTORID = ?";
+
+        try (Connection conn = connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // set the corresponding param
+            pstmt.setInt(1, amount);
+            pstmt.setInt(2, activeUserID);
+            pstmt.setString(3, actor);
+            
+            int r = pstmt.executeUpdate();
+            System.out.println(r);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+
     public static String adminLogin(String username, String password){
         String sql = "SELECT NAME,USERNAME,PASSWORD,TAXID FROM admin";
         
