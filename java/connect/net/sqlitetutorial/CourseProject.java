@@ -1,6 +1,10 @@
+package net.sqlitetutorial;
+
 import java.awt.*;  
 import java.awt.event.*;
 import javax.swing.*;  
+
+
     
 public class CourseProject{  
     CardLayout card_frame;
@@ -41,14 +45,14 @@ public class CourseProject{
         JButton b1 = setButton("Manager Login");
         b1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("user login");
+                System.out.println("manager login");
                 card_frame.show(card_panel, "manager_login");
             }
         });
         JButton b2 = setButton("User Login");
         b2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("manager login");
+                System.out.println("user login");
                 card_frame.show(card_panel, "user_login");
             }
         });
@@ -86,7 +90,11 @@ public class CourseProject{
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user in");
-                card_frame.show(card_panel, "user_inter");
+                boolean c = Connect.userLogin(username_field.getText(), password_field.getText());
+                if (c)
+                    card_frame.show(card_panel, "user_inter");
+                else
+                    System.out.println("login Failed");
             }
         });
 
@@ -169,6 +177,11 @@ public class CourseProject{
         user_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("user in");
+                Connect.registerUser(name_field.getText(), user_field.getText(),
+                                    pass_field.getText(), addr_field.getText(),
+                                    state_field.getText(), phone_field.getText(),
+                                    email_field.getText(), taxID_field.getText(),
+                                    SSN_field.getText(), false);
                 card_frame.show(card_panel, "user_inter");
             }
         });
@@ -176,6 +189,11 @@ public class CourseProject{
         manager_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("manager in");
+                Connect.registerUser(name_field.getText(), user_field.getText(),
+                                    pass_field.getText(), addr_field.getText(),
+                                    state_field.getText(), phone_field.getText(),
+                                    email_field.getText(), taxID_field.getText(),
+                                    SSN_field.getText(), false);
                 card_frame.show(card_panel, "manager_inter");
             }
         });
@@ -306,7 +324,11 @@ public class CourseProject{
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("manager in");
-                card_frame.show(card_panel, "manager_inter");
+                boolean c = Connect.adminLogin(username_field.getText(), password_field.getText());
+                if (c)
+                    card_frame.show(card_panel, "manager_inter");
+                else
+                    System.out.println("login Failed");
             }
         });
 
